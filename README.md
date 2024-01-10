@@ -5,4 +5,6 @@ Library of Cairo contracts for Starknet.
 
 Please bear in mind that the contracts aren't audited. This is primarily for education purposes. Use caution and do not use them for production.
 
+Do contribute, check [the contributing file](https://github.com/Ursulafe/Cairium/blob/main/CONTRIBUTING.md).
 
+Reach out to us on [Twitter](https://twitter.com/cairium).
