@@ -1,9 +1,3 @@
-// SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts for Cairo v0.8.0 (account/account.cairo)
-
-/// # Account Component
-///
-/// The Account component enables contracts to behave as accounts.
 #[starknet::component]
 mod AccountComponent {
     use ecdsa::check_ecdsa_signature;
