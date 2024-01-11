@@ -1,14 +1,3 @@
-// SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts for Cairo v0.8.0 (access/ownable/ownable.cairo)
-
-/// # Ownable Component
-///
-/// The Ownable component provides a basic access control mechanism, where
-/// there is an account (an owner) that can be granted exclusive access to
-/// specific functions.
-///
-/// The initial owner can be set by using the `initializer` function in
-/// construction time. This can later be changed with `transfer_ownership`.
 #[starknet::component]
 mod OwnableComponent {
     use openzeppelin::access::ownable::interface;
