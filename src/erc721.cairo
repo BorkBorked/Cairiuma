@@ -31,3 +31,17 @@ func mint{syscall_ptr: felt*, range_check_ptr}(recipient: felt, token_id: felt):
     balances.write(recipient, balance + 1)
     return ()
 end
+
+
+func transfer{syscall_ptr: felt*, range_check_ptr}(sender: felt, recipient: felt, token_id: felt):
+    let (owner) = owners.read(token_id)
+    assert owner == sender, "Sender does not own the token"
+
+    owners.write(token_id, recipient)
+    let (sender_balance) = balances.read(sender)
+    let (recipient_balance) = balances.read(recipient)
+    balances.write(sender, sender_balance - 1)
+    balances.write(recipient, recipient_balance + 1)
+    return ()
+end
+
