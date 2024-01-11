@@ -1,0 +1,9 @@
+In Starknet's blockchain architecture, contract upgradeability is achieved through a distinct approach that diverges from the proxy patterns commonly used in other blockchains. Starknet incorporates a native upgradeability feature, which allows for the updating of a contract's source code directly via a system call (syscall). This method obviates the need for proxy mechanisms.
+
+Understanding Starknet's upgradeability requires grasping the concept of contract classes. A contract class represents the source code of a contract, with each class identified by a unique class hash. Multiple contracts can be instances of the same class. The replace_class_syscall is a key feature that permits the updating of a contract's source code post-deployment by replacing its class hash.
+
+The text also discusses the Upgradeable component provided by OpenZeppelin Contracts for Cairo, designed to add upgradeability support to contracts. Upgrade operations are sensitive and typically require access control mechanisms to prevent unauthorized changes. The Ownable module is often used in conjunction with the Upgradeable component for this purpose. A JavaScript code snippet illustrates the implementation of these components, demonstrating how a contract owner can update the contract's class hash to upgrade the contract.
+
+Finally, the text addresses the role of proxies in Starknet. Due to Starknet's native upgradeability and cloning capabilities, traditional proxies are less relevant. Starknet's lack of a fallback mechanism means that it cannot support generic proxy contracts. However, limited proxy contracts can still be implemented for specific functions, allowing for the upgrade of certain aspects of a contract's logic.
+
+Overall, Starknet presents a streamlined and integrated approach to contract upgradeability, distinguishing itself from traditional blockchain platforms by eliminating the need for proxy patterns and simplifying the upgrade process.
