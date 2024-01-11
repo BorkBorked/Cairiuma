@@ -45,3 +45,17 @@ func transfer{syscall_ptr: felt*, range_check_ptr}(sender: felt, recipient: felt
     return ()
 end
 
+@view
+func balanceOf{syscall_ptr: felt*, range_check_ptr}(owner: felt) -> (balance: felt):
+    let (balance) = balances.read(owner)
+    return (balance)
+end
+
+@external
+func transferFrom{syscall_ptr: felt*, range_check_ptr}(
+    sender: felt, recipient: felt, tokenId: felt
+):
+    transfer(sender, recipient, tokenId)
+    return ()
+end
+
