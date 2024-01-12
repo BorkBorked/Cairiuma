@@ -8,3 +8,7 @@ use starknet::ContractAddress;
 struct DualCaseSRC5 {
     contract_address: ContractAddress
 }
+
+trait DualCaseSRC5Trait {
+    fn supports_interface(self: @DualCaseSRC5, interface_id: felt252) -> bool;
+}
