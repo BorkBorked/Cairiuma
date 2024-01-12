@@ -43,3 +43,46 @@ mod PausableComponent {
             self.Pausable_paused.read()
         }
     }
+
+
+    #[generate_trait]
+    impl InternalImpl<
+        TContractState, +HasComponent<TContractState>
+    > of InternalTrait<TContractState> {
+        /// Makes a function only callable when the contract is not paused.
+        fn assert_not_paused(self: @ComponentState<TContractState>) {
+            assert(!self.Pausable_paused.read(), Errors::PAUSED);
+        }
+
+        /// Makes a function only callable when the contract is paused.
+        fn assert_paused(self: @ComponentState<TContractState>) {
+            assert(self.Pausable_paused.read(), Errors::NOT_PAUSED);
+        }
+
+        /// Triggers a stopped state.
+        ///
+        /// Requirements:
+        ///
+        /// - The contract is not paused.
+        ///
+        /// Emits a `Paused` event.
+        fn _pause(ref self: ComponentState<TContractState>) {
+            self.assert_not_paused();
+            self.Pausable_paused.write(true);
+            self.emit(Paused { account: get_caller_address() });
+        }
+
+        /// Lifts the pause on the contract.
+        ///
+        /// Requirements:
+        ///
+        /// - The contract is paused.
+        ///
+        /// Emits an `Unpaused` event.
+        fn _unpause(ref self: ComponentState<TContractState>) {
+            self.assert_paused();
+            self.Pausable_paused.write(false);
+            self.emit(Unpaused { account: get_caller_address() });
+        }
+    }
+}
