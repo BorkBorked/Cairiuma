@@ -12,3 +12,7 @@ struct DualCaseSRC5 {
 trait DualCaseSRC5Trait {
     fn supports_interface(self: @DualCaseSRC5, interface_id: felt252) -> bool;
 }
+
+impl DualCaseSRC5Impl of DualCaseSRC5Trait {
+    fn supports_interface(self: @DualCaseSRC5, interface_id: felt252) -> bool {
+        let mut args = array![interface_id];
