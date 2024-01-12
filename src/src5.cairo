@@ -25,3 +25,32 @@ mod SRC5Component {
             self.SRC5_supported_interfaces.read(interface_id)
         }
     }
+    #[embeddable_as(SRC5CamelImpl)]
+    impl SRC5Camel<
+        TContractState, +HasComponent<TContractState>
+    > of interface::ISRC5Camel<ComponentState<TContractState>> {
+        fn supportsInterface(self: @ComponentState<TContractState>, interfaceId: felt252) -> bool {
+            self.supports_interface(interfaceId)
+        }
+    }
+
+    #[generate_trait]
+    impl InternalImpl<
+        TContractState, +HasComponent<TContractState>
+    > of InternalTrait<TContractState> {
+        /// Registers the given interface as supported by the contract.
+        fn register_interface(ref self: ComponentState<TContractState>, interface_id: felt252) {
+            self.SRC5_supported_interfaces.write(interface_id, true);
+        }
+
+        /// Deregisters the given interface as supported by the contract.
+        ///
+        /// Requirements:
+        ///
+        /// - `interface_id` is not `ISRC5_ID`
+        fn deregister_interface(ref self: ComponentState<TContractState>, interface_id: felt252) {
+            assert(interface_id != interface::ISRC5_ID, Errors::INVALID_ID);
+            self.SRC5_supported_interfaces.write(interface_id, false);
+        }
+    }
+}
