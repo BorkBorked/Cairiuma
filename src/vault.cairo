@@ -21,3 +21,20 @@ trait ISimpleVault<TContractState> {
     fn deposit(ref self: TContractState, amount: u256);
     fn withdraw(ref self: TContractState, shares: u256);
 }
+
+#[starknet::interface]
+trait ISimpleVault<TContractState> {
+    fn deposit(ref self: TContractState, amount: u256);
+    fn withdraw(ref self: TContractState, shares: u256);
+}
+
+#[starknet::contract]
+mod SimpleVault {
+    use super::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    #[storage]
+    struct Storage {
+        token: IERC20Dispatcher,
+        total_supply: u256,
+        balance_of: LegacyMap<ContractAddress, u256>
+    }
