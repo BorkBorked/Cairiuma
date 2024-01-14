@@ -81,3 +81,22 @@ mod SimpleVault {
             PrivateFunctions::_mint(ref self, caller, shares);
             self.token.read().transfer_from(caller, this, amount);
         }
+        fn withdraw(ref self: ContractState, shares: u256) {
+            // a = amount
+            // B = balance of token before withdraw
+            // T = total supply
+            // s = shares to burn
+            //
+            // (T - s) / T = (B - a) / B 
+            //
+            // a = sB / T
+            let caller = get_caller_address();
+            let this = get_contract_address();
+
+            let balance = self.token.read().balance_of(this);
+            let amount = (shares * balance) / self.total_supply.read();
+            PrivateFunctions::_burn(ref self, caller, shares);
+            self.token.read().transfer(caller, amount);
+        }
+    }
+}
