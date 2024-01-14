@@ -56,3 +56,28 @@ mod SimpleVault {
             self.balance_of.write(from, self.balance_of.read(from) - shares);
         }
     }
+    #[abi(embed_v0)]
+    impl SimpleVault of super::ISimpleVault<ContractState> {
+        fn deposit(ref self: ContractState, amount: u256) {
+            // a = amount
+            // B = balance of token before deposit
+            // T = total supply
+            // s = shares to mint
+            //
+            // (T + s) / T = (a + B) / B 
+            //
+            // s = aT / B
+            let caller = get_caller_address();
+            let this = get_contract_address();
+
+            let mut shares = 0;
+            if self.total_supply.read() == 0 {
+                shares = amount;
+            } else {
+                let balance = self.token.read().balance_of(this);
+                shares = (amount * self.total_supply.read()) / balance;
+            }
+
+            PrivateFunctions::_mint(ref self, caller, shares);
+            self.token.read().transfer_from(caller, this, amount);
+        }
