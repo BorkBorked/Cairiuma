@@ -42,3 +42,17 @@ mod SimpleVault {
     fn constructor(ref self: ContractState, token: ContractAddress) {
         self.token.write(IERC20Dispatcher { contract_address: token });
     }
+
+
+    #[generate_trait]
+    impl PrivateFunctions of PrivateFunctionsTrait {
+        fn _mint(ref self: ContractState, to: ContractAddress, shares: u256) {
+            self.total_supply.write(self.total_supply.read() + shares);
+            self.balance_of.write(to, self.balance_of.read(to) + shares);
+        }
+
+        fn _burn(ref self: ContractState, from: ContractAddress, shares: u256) {
+            self.total_supply.write(self.total_supply.read() - shares);
+            self.balance_of.write(from, self.balance_of.read(from) - shares);
+        }
+    }
