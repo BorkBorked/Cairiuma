@@ -38,3 +38,7 @@ mod SimpleVault {
         total_supply: u256,
         balance_of: LegacyMap<ContractAddress, u256>
     }
+    #[constructor]
+    fn constructor(ref self: ContractState, token: ContractAddress) {
+        self.token.write(IERC20Dispatcher { contract_address: token });
+    }
