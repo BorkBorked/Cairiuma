@@ -35,3 +35,12 @@ mod ListExample {
             let mut current_tasks_list = self.tasks.read();
             current_tasks_list.append(new_task);
         }
+        fn is_empty_list(self: @ContractState) -> bool {
+            let mut current_amount_list = self.amount.read();
+            current_amount_list.is_empty()
+        }
+
+        fn list_length(self: @ContractState) -> u32 {
+            let mut current_amount_list = self.amount.read();
+            current_amount_list.len()
+        }
