@@ -9,3 +9,12 @@ trait IListExample<TContractState> {
     fn pop_front_list(ref self: TContractState);
     fn array_conversion(self: @TContractState) -> Array<u128>;
 }
+#[starknet::contract]
+mod ListExample {
+    use alexandria_storage::list::{List, ListTrait};
+
+    #[storage]
+    struct Storage {
+        amount: List<u128>,
+        tasks: List<Task>
+    }
