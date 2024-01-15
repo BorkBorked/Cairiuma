@@ -52,3 +52,14 @@ mod ListExample {
             let mut current_amount_list = self.amount.read();
             current_amount_list.set(index, number);
         }
+        fn pop_front_list(ref self: ContractState) {
+            let mut current_amount_list = self.amount.read();
+            current_amount_list.pop_front();
+        }
+
+        fn array_conversion(self: @ContractState) -> Array<u128> {
+            let mut current_amount_list = self.amount.read();
+            current_amount_list.array()
+        }
+    }
+}
