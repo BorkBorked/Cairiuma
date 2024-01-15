@@ -23,3 +23,15 @@ mod ListExample {
         description: felt252,
         status: felt252
     }
+    #[abi(embed_v0)]
+    impl ListExample of super::IListExample<ContractState> {
+        fn add_in_amount(ref self: ContractState, number: u128) {
+            let mut current_amount_list = self.amount.read();
+            current_amount_list.append(number);
+        }
+
+        fn add_in_task(ref self: ContractState, description: felt252, status: felt252) {
+            let new_task = Task { description: description, status: status };
+            let mut current_tasks_list = self.tasks.read();
+            current_tasks_list.append(new_task);
+        }
