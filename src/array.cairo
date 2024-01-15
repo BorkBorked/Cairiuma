@@ -73,3 +73,20 @@ trait IStoreArrayContract<TContractState> {
 #[starknet::contract]
 mod StoreArrayContract {
     use super::StoreFelt252Array;
+    #[storage]
+    struct Storage {
+        arr: Array<felt252>
+    }
+
+    #[abi(embed_v0)]
+    impl StoreArrayImpl of super::IStoreArrayContract<ContractState> {
+        fn store_array(ref self: ContractState, arr: Array<felt252>) {
+            self.arr.write(arr);
+        }
+
+        fn read_array(self: @ContractState) -> Array<felt252> {
+            self.arr.read()
+        }
+    }
+}
+// ANCHOR_END: StoreArrayContract
