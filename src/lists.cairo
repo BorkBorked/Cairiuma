@@ -44,3 +44,11 @@ mod ListExample {
             let mut current_amount_list = self.amount.read();
             current_amount_list.len()
         }
+        fn get_from_index(self: @ContractState, index: u32) -> u128 {
+            self.amount.read()[index]
+        }
+
+        fn set_from_index(ref self: ContractState, index: u32, number: u128) {
+            let mut current_amount_list = self.amount.read();
+            current_amount_list.set(index, number);
+        }
