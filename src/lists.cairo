@@ -18,3 +18,8 @@ mod ListExample {
         amount: List<u128>,
         tasks: List<Task>
     }
+    #[derive(Copy, Drop, Serde, starknet::Store)]
+    struct Task {
+        description: felt252,
+        status: felt252
+    }
