@@ -31,3 +31,11 @@ impl StoreFelt252Array of Store<Array<felt252>> {
             if offset >= exit {
                 break;
             }
+            let value = Store::<felt252>::read_at_offset(address_domain, base, offset).unwrap();
+            arr.append(value);
+            offset += Store::<felt252>::size();
+        };
+
+        // Return the array.
+        Result::Ok(arr)
+    }
