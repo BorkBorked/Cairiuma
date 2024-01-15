@@ -58,3 +58,8 @@ impl StoreFelt252Array of Store<Array<felt252>> {
             };
         }
     }
+    fn size() -> u8 {
+        255 * Store::<felt252>::size()
+    }
+}
+// ANCHOR_END: StorageAccessImpl
