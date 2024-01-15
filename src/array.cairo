@@ -39,3 +39,22 @@ impl StoreFelt252Array of Store<Array<felt252>> {
         // Return the array.
         Result::Ok(arr)
     }
+    fn write_at_offset(
+        address_domain: u32, base: StorageBaseAddress, mut offset: u8, mut value: Array<felt252>
+    ) -> SyscallResult<()> {
+        // // Store the length of the array in the first storage slot.
+        let len: u8 = value.len().try_into().expect('Storage - Span too large');
+        Store::<u8>::write_at_offset(address_domain, base, offset, len);
+        offset += 1;
+
+        // Store the array elements sequentially
+        loop {
+            match value.pop_front() {
+                Option::Some(element) => {
+                    Store::<felt252>::write_at_offset(address_domain, base, offset, element);
+                    offset += Store::<felt252>::size();
+                },
+                Option::None(_) => { break Result::Ok(()); }
+            };
+        }
+    }
