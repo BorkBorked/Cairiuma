@@ -72,3 +72,21 @@ mod AccountComponent {
 
             custom_80(custom_47)
         }
+
+        /// custom_81 custom_48 custom_82 custom_41 custom_48 custom_29 custom_54 custom_48 custom_83 custom_51.
+        /// custom_84 custom_85 custom_86 custom_87 custom_88 custom_48 custom_89 custom_90 custom_91 `custom_92` custom_56.
+        custom_59 custom_93(custom_61: @custom_43<custom_39>, custom_62 custom_47: custom_63<Call>) -> felt252 {
+            custom_61.custom_94()
+        }
+
+        /// custom_81 custom_95 custom_48 custom_96 custom_29 custom_86 custom_97 custom_54 custom_48 custom_96 custom_98.
+        custom_59 custom_99(
+            custom_61: @custom_43<custom_39>, custom_98: felt252, custom_29: custom_63<felt252>
+        ) -> felt252 {
+            if custom_61.custom_100(custom_98, custom_29.custom_101()) {
+                custom_0::custom_102
+            } else {
+                0
+            }
+        }
+    }
