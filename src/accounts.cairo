@@ -1,13 +1,15 @@
 #[starknet::component]
 mod AccountComponent {
+    use starknet::get_caller_address;
+    use starknet::get_contract_address;
+    use starknet::get_tx_info;
+    use starknet::account::Call;
     use ecdsa::check_ecdsa_signature;
     use openzeppelin::account::interface;
     use openzeppelin::introspection::src5::SRC5Component::InternalTrait as SRC5InternalTrait;
     use openzeppelin::introspection::src5::SRC5Component;
-    use starknet::account::Call;
-    use starknet::get_caller_address;
-    use starknet::get_contract_address;
-    use starknet::get_tx_info;
+
+
 
     const TRANSACTION_VERSION: felt252 = 1;
     // 2**128 + TRANSACTION_VERSION
@@ -15,23 +17,23 @@ mod AccountComponent {
 
     #[storage]
     struct Storage {
-        Account_public_key: felt252
+        Clé_publique_compte: felt252
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
-        OwnerAdded: OwnerAdded,
-        OwnerRemoved: OwnerRemoved
+        AjoutOwner: AjoutOwner,
+        RetraitOwner: RetraitOwner
     }
 
     #[derive(Drop, starknet::Event)]
-    struct OwnerAdded {
-        new_owner_guid: felt252
+    struct AjoutOwner {
+        Nouveau_Owner: felt252
     }
 
     #[derive(Drop, starknet::Event)]
-    struct OwnerRemoved {
+    struct RetraitOwner {
         removed_owner_guid: felt252
     }
 
@@ -49,21 +51,24 @@ mod AccountComponent {
         +SRC5Component::HasComponent<TContractState>,
         +Drop<TContractState>
     > of interface::ISRC6<ComponentState<TContractState>> {
-        /// Executes a list of calls from the account.
+        /// Exécute une liste d'appels depuis le compte.
         ///
-        /// Requirements:
+        /// Exigences :
         ///
-        /// - The transaction version must be `TRANSACTION_VERSION` for actual transactions.
-        /// For simulations, the version must be `QUERY_VERSION`.
+        /// - La version de la transaction doit être `TRANSACTION_VERSION` pour les transactions réelles.
+        /// Pour les simulations, la version doit être `QUERY_VERSION`. 
+
         fn __execute__(
             self: @ComponentState<TContractState>, mut calls: Array<Call>
         ) -> Array<Span<felt252>> {
-            // Avoid calls from other contracts
-            // https://github.com/OpenZeppelin/cairo-contracts/issues/344
+            // Éviter les appels provenant d'autres contrats
+            // https://github.com
+
             let sender = get_caller_address();
             assert(sender.is_zero(), Errors::INVALID_CALLER);
 
-            // Check tx version
+            // Vérifier la version de la transaction
+
             let tx_info = get_tx_info().unbox();
             let version = tx_info.version;
             if version != TRANSACTION_VERSION {
@@ -73,13 +78,15 @@ mod AccountComponent {
             _execute_calls(calls)
         }
 
-        /// Verifies the validity of the signature for the current transaction.
-        /// This function is used by the protocol to verify `invoke` transactions.
+        /// Vérifie la validité de la signature pour la transaction en cours.
+        /// Cette fonction est utilisée par le protocole pour vérifier les transactions `invoke`.
+
         fn __validate__(self: @ComponentState<TContractState>, mut calls: Array<Call>) -> felt252 {
             self.validate_transaction()
         }
 
-        /// Verifies that the given signature is valid for the given hash.
+        /// Vérifie que la signature donnée est valide pour le hash donné.
+
         fn is_valid_signature(
             self: @ComponentState<TContractState>, hash: felt252, signature: Array<felt252>
         ) -> felt252 {
@@ -98,8 +105,9 @@ mod AccountComponent {
         +SRC5Component::HasComponent<TContractState>,
         +Drop<TContractState>
     > of interface::IDeclarer<ComponentState<TContractState>> {
-        /// Verifies the validity of the signature for the current transaction.
-        /// This function is used by the protocol to verify `declare` transactions.
+        /// Vérifie la validité de la signature pour la transaction en cours.
+        /// Cette fonction est utilisée par le protocole pour vérifier les transactions `declare`.
+
         fn __validate_declare__(
             self: @ComponentState<TContractState>, class_hash: felt252
         ) -> felt252 {
@@ -114,8 +122,9 @@ mod AccountComponent {
         +SRC5Component::HasComponent<TContractState>,
         +Drop<TContractState>
     > of interface::IDeployable<ComponentState<TContractState>> {
-        /// Verifies the validity of the signature for the current transaction.
-        /// This function is used by the protocol to verify `deploy_account` transactions.
+        /// Vérifie la validité de la signature pour la transaction en cours.
+        /// Cette fonction est utilisée par le protocole pour vérifier les transactions de `deploy_account`.
+
         fn __validate_deploy__(
             self: @ComponentState<TContractState>,
             class_hash: felt252,
@@ -133,26 +142,29 @@ mod AccountComponent {
         +SRC5Component::HasComponent<TContractState>,
         +Drop<TContractState>
     > of interface::IPublicKey<ComponentState<TContractState>> {
-        /// Returns the current public key of the account.
+        /// Renvoie la clé publique actuelle du compte.
+
         fn get_public_key(self: @ComponentState<TContractState>) -> felt252 {
-            self.Account_public_key.read()
+            self.Clé_publique_compte.read()
         }
 
-        /// Sets the public key of the account to `new_public_key`.
+        /// Définit la clé publique du compte à `new_public_key`.
         ///
-        /// Requirements:
+        /// Exigences :
         ///
-        /// - The caller must be the contract itself.
+        /// - L'appelant doit être le contrat lui-même.
         ///
-        /// Emits an `OwnerRemoved` event.
+        /// Émet un événement `RetraitOwner`.
+
         fn set_public_key(ref self: ComponentState<TContractState>, new_public_key: felt252) {
             self.assert_only_self();
-            self.emit(OwnerRemoved { removed_owner_guid: self.Account_public_key.read() });
+            self.emit(RetraitOwner { removed_owner_guid: self.Clé_publique_compte.read() });
             self._set_public_key(new_public_key);
         }
     }
 
-    /// Adds camelCase support for `ISRC6`.
+    /// Ajoute le support de camelCase pour `ISRC6`.
+
     #[embeddable_as(SRC6CamelOnlyImpl)]
     impl SRC6CamelOnly<
         TContractState,
@@ -167,7 +179,8 @@ mod AccountComponent {
         }
     }
 
-    /// Adds camelCase support for `PublicKeyTrait`.
+    /// Ajoute le support de camelCase pour `ISRC6`.
+
     #[embeddable_as(PublicKeyCamelImpl)]
     impl PublicKeyCamel<
         TContractState,
@@ -176,7 +189,7 @@ mod AccountComponent {
         +Drop<TContractState>
     > of interface::IPublicKeyCamel<ComponentState<TContractState>> {
         fn getPublicKey(self: @ComponentState<TContractState>) -> felt252 {
-            self.Account_public_key.read()
+            self.Clé_publique_compte.read()
         }
 
         fn setPublicKey(ref self: ComponentState<TContractState>, newPublicKey: felt252) {
@@ -191,23 +204,26 @@ mod AccountComponent {
         impl SRC5: SRC5Component::HasComponent<TContractState>,
         +Drop<TContractState>
     > of InternalTrait<TContractState> {
-        /// Initializes the account by setting the initial public key
-        /// and registering the ISRC6 interface Id.
+        /// Initialise le compte en définissant la clé publique initiale
+        /// et en enregistrant l'identifiant de l'interface ISRC6.
+
         fn initializer(ref self: ComponentState<TContractState>, public_key: felt252) {
             let mut src5_component = get_dep_component_mut!(ref self, SRC5);
             src5_component.register_interface(interface::ISRC6_ID);
             self._set_public_key(public_key);
         }
 
-        /// Validates that the caller is the account itself. Otherwise it reverts.
+        /// Vérifie que l'appelant est le compte lui-même. Sinon, cela annule l'opération.
+
         fn assert_only_self(self: @ComponentState<TContractState>) {
             let caller = get_caller_address();
             let self = get_contract_address();
             assert(self == caller, Errors::UNAUTHORIZED);
         }
 
-        /// Validates the signature for the current transaction.
-        /// Returns the short string `VALID` if valid, otherwise it reverts.
+        /// Valide la signature pour la transaction en cours.
+        /// Retourne la chaîne courte `VALID` si elle est valide, sinon cela annule l'opération.
+
         fn validate_transaction(self: @ComponentState<TContractState>) -> felt252 {
             let tx_info = get_tx_info().unbox();
             let tx_hash = tx_info.transaction_hash;
@@ -216,17 +232,19 @@ mod AccountComponent {
             starknet::VALIDATED
         }
 
-        /// Sets the public key without validating the caller.
-        /// The usage of this method outside the `set_public_key` function is discouraged.
+        /// Définit la clé publique sans valider l'appelant.
+        /// L'utilisation de cette méthode en dehors de la fonction `set_public_key` est déconseillée.
         ///
-        /// Emits an `OwnerAdded` event.
+        /// Émet un événement `AjoutOwner`.
+
         fn _set_public_key(ref self: ComponentState<TContractState>, new_public_key: felt252) {
-            self.Account_public_key.write(new_public_key);
-            self.emit(OwnerAdded { new_owner_guid: new_public_key });
+            self.Clé_publique_compte.write(new_public_key);
+            self.emit(AjoutOwner { Nouveau_Owner: new_public_key });
         }
 
-        /// Returns whether the given signature is valid for the given hash
-        /// using the account's current public key.
+        /// Indique si la signature donnée est valide pour le hachage donné
+        /// en utilisant la clé publique actuelle du compte.
+
         fn _is_valid_signature(
             self: @ComponentState<TContractState>, hash: felt252, signature: Span<felt252>
         ) -> bool {
@@ -234,7 +252,7 @@ mod AccountComponent {
 
             if valid_length {
                 check_ecdsa_signature(
-                    hash, self.Account_public_key.read(), *signature.at(0_u32), *signature.at(1_u32)
+                    hash, self.Clé_publique_compte.read(), *signature.at(0_u32), *signature.at(1_u32)
                 )
             } else {
                 false
