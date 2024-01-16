@@ -1,263 +1,263 @@
-#[starknet::component]
+#[custom_0::custom_1]
 mod AccountComponent {
-    use ecdsa::verifier_signature_ecdsa;
-    use openzeppelin::account::interface;
-    use openzeppelin::introspection::src5::ComposantSRC5::TraitInterne as SRC5InternalTrait;
-    use openzeppelin::introspection::src5::ComposantSRC5;
-    use starknet::account::Appel;
-    use starknet::obtenir_adresse_appelant;
-    use starknet::obtenir_adresse_contrat;
-    use starknet::obtenir_info_tx;
+    use custom_2::check_ecdsa_signature;
+    use custom_3::custom_4::custom_5;
+    use custom_3::custom_6::custom_7::SRC5Component::InternalTrait as custom_8;
+    use custom_3::custom_6::custom_7::SRC5Component;
+    use custom_0::custom_4::Call;
+    use custom_0::get_caller_address;
+    use custom_0::get_contract_address;
+    use custom_0::get_tx_info;
 
-    const VERSION_TRANSACTION: felt252 = 1;
-    // 2**128 + VERSION_TRANSACTION
-    const QUERY_VERSION: felt252 = 0x100000000000000000000000000000001;
+    const custom_9: felt252 = 1;
+    // 2**128 + custom_9
+    const custom_10: felt252 = 0x100000000000000000000000000000001;
 
-    #[storage]
-    struct Storage {
-        Account_public_key: felt252
+    #[custom_11]
+    struct custom_12 {
+        custom_13: felt252
     }
 
-    #[event]
-    #[derive(Drop, starknet::Event)]
-    enum Event {
-        OwnerAdded: OwnerAdded,
-        OwnerRemoved: OwnerRemoved
+    #[custom_14]
+    #[custom_15(custom_16, custom_0::custom_17)]
+    custom_18 custom_17 {
+        custom_19: custom_19,
+        custom_20: custom_20
     }
 
-    #[derive(Drop, starknet::Event)]
-    struct OwnerAdded {
-        new_owner_guid: felt252
+    #[custom_15(custom_16, custom_0::custom_17)]
+    struct custom_19 {
+        custom_21: felt252
     }
 
-    #[derive(Drop, starknet::Event)]
-    struct OwnerRemoved {
-        removed_owner_guid: felt252
+    #[custom_15(custom_16, custom_0::custom_17)]
+    struct custom_20 {
+        custom_22: felt252
     }
 
-    mod Errors {
-        const INVALID_CALLER: felt252 = 'Account: invalid caller';
-        const INVALID_SIGNATURE: felt252 = 'Account: invalid signature';
-        const INVALID_TX_VERSION: felt252 = 'Account: invalid tx version';
-        const UNAUTHORIZED: felt252 = 'Account: unauthorized';
+    mod custom_23 {
+        const custom_24: felt252 = 'custom_25: custom_26 custom_27';
+        const custom_28: felt252 = 'custom_25: custom_26 custom_29';
+        const custom_30: felt252 = 'custom_25: custom_26 custom_31 custom_32';
+        const custom_33: felt252 = 'custom_25: custom_34';
     }
 
-    #[embeddable_as(SRC6Impl)]
-    impl SRC6<
-        TContractState,
-        +HasComponent<TContractState>,
-        +ComposantSRC5::HasComponent<TContractState>,
-        +Drop<TContractState>
-    > of interface::ISRC6<ComponentState<TContractState>> {
-        /// Executes a list of calls from the account.
+    #[custom_35(custom_36)]
+    custom_37 custom_38<
+        custom_39,
+        +custom_40<custom_39>,
+        +SRC5Component::custom_40<custom_39>,
+        +custom_16<custom_39>
+    > custom_41 custom_5::custom_42<custom_43<custom_39>> {
+        /// custom_44 custom_45 custom_46 custom_41 custom_47 from custom_48 custom_4.
         ///
-        /// Requirements:
+        /// custom_49:
         ///
-        /// - The transaction version must be `VERSION_TRANSACTION` for actual transactions.
-        /// For simulations, the version must be `QUERY_VERSION`.
-        fn __execute__(
-            self: @ComponentState<TContractState>, mut calls: Array<Appel>
-        ) -> Array<Span<felt252>> {
-            // Avoid calls from other contracts
-            // https://github.com/OpenZeppelin/cairo-contracts/issues/344
-            let sender = obtenir_adresse_appelant();
-            assert(sender.is_zero(), Errors::INVALID_CALLER);
+        /// - custom_50 custom_51 custom_32 custom_52 custom_53 `custom_9` custom_54 custom_55 custom_56.
+        /// custom_57 custom_58, custom_48 custom_32 custom_52 custom_53 `custom_10`.
+        custom_59 custom_60(
+            custom_61: @custom_43<custom_39>, custom_62 custom_47: custom_63<Call>
+        ) -> custom_63<custom_64<felt252>> {
+            // custom_65 custom_47 from custom_66 custom_67
+            // custom_68://custom_69.custom_70/custom_71/custom_72-custom_67/custom_73/344
+            custom_74 custom_75 = get_caller_address();
+            assert(custom_75.custom_76(), custom_23::custom_24);
 
-            // Check tx version
-            let tx_info = obtenir_info_tx().unbox();
-            let version = tx_info.version;
-            if version != VERSION_TRANSACTION {
-                assert(version == QUERY_VERSION, Errors::INVALID_TX_VERSION);
+            // custom_77 custom_31 custom_32
+            custom_74 custom_78 = get_tx_info().custom_79();
+            custom_74 custom_32 = custom_78.custom_32;
+            if custom_32 != custom_9 {
+                assert(custom_32 == custom_10, custom_23::custom_30);
             }
 
-            _execute_calls(calls)
+            custom_80(custom_47)
         }
 
-        /// Verifies the validity of the signature for the current transaction.
-        /// This function is used by the protocol to verify `invoke` transactions.
-        fn __validate__(self: @ComponentState<TContractState>, mut calls: Array<Appel>) -> felt252 {
-            self.validate_transaction()
+        /// custom_81 custom_48 custom_82 custom_41 custom_48 custom_29 custom_54 custom_48 custom_83 custom_51.
+        /// custom_84 custom_85 custom_86 custom_87 custom_88 custom_48 custom_89 custom_90 custom_91 `custom_92` custom_56.
+        custom_59 custom_93(custom_61: @custom_43<custom_39>, custom_62 custom_47: custom_63<Call>) -> felt252 {
+            custom_61.custom_94()
         }
 
-        /// Verifies that the given signature is valid for the given hash.
-        fn is_valid_signature(
-            self: @ComponentState<TContractState>, hash: felt252, signature: Array<felt252>
+        /// custom_81 custom_95 custom_48 custom_96 custom_29 custom_86 custom_97 custom_54 custom_48 custom_96 custom_98.
+        custom_59 custom_99(
+            custom_61: @custom_43<custom_39>, custom_98: felt252, custom_29: custom_63<felt252>
         ) -> felt252 {
-            if self._is_valid_signature(hash, signature.span()) {
-                starknet::VALIDATED
+            if custom_61.custom_100(custom_98, custom_29.custom_101()) {
+                custom_0::custom_102
             } else {
                 0
             }
         }
     }
 
-    #[embeddable_as(DeclarerImpl)]
-    impl Declarer<
-        TContractState,
-        +HasComponent<TContractState>,
-        +ComposantSRC5::HasComponent<TContractState>,
-        +Drop<TContractState>
-    > of interface::IDeclarer<ComponentState<TContractState>> {
-        /// Verifies the validity of the signature for the current transaction.
-        /// This function is used by the protocol to verify `declare` transactions.
-        fn __validate_declare__(
-            self: @ComponentState<TContractState>, class_hash: felt252
+    #[custom_35(custom_103)]
+    custom_37 custom_104<
+        custom_39,
+        +custom_40<custom_39>,
+        +SRC5Component::custom_40<custom_39>,
+        +custom_16<custom_39>
+    > custom_41 custom_5::custom_105<custom_43<custom_39>> {
+        /// custom_81 custom_48 custom_82 custom_41 custom_48 custom_29 custom_54 custom_48 custom_83 custom_51.
+        /// custom_84 custom_85 custom_86 custom_87 custom_88 custom_48 custom_89 custom_90 custom_91 `custom_106` custom_56.
+        custom_59 custom_107(
+            custom_61: @custom_43<custom_39>, custom_108: felt252
         ) -> felt252 {
-            self.validate_transaction()
+            custom_61.custom_94()
         }
     }
 
-    #[embeddable_as(DeployableImpl)]
-    impl Deployable<
-        TContractState,
-        +HasComponent<TContractState>,
-        +ComposantSRC5::HasComponent<TContractState>,
-        +Drop<TContractState>
-    > of interface::IDeployable<ComponentState<TContractState>> {
-        /// Verifies the validity of the signature for the current transaction.
-        /// This function is used by the protocol to verify `deploy_account` transactions.
-        fn __validate_deploy__(
-            self: @ComponentState<TContractState>,
-            class_hash: felt252,
-            contract_address_salt: felt252,
-            public_key: felt252
+    #[custom_35(custom_109)]
+    custom_37 custom_110<
+        custom_39,
+        +custom_40<custom_39>,
+        +SRC5Component::custom_40<custom_39>,
+        +custom_16<custom_39>
+    > custom_41 custom_5::custom_111<custom_43<custom_39>> {
+        /// custom_81 custom_48 custom_82 custom_41 custom_48 custom_29 custom_54 custom_48 custom_83 custom_51.
+        /// custom_84 custom_85 custom_86 custom_87 custom_88 custom_48 custom_89 custom_90 custom_91 `custom_112` custom_56.
+        custom_59 custom_113(
+            custom_61: @custom_43<custom_39>,
+            custom_108: felt252,
+            custom_114: felt252,
+            custom_115: felt252
         ) -> felt252 {
-            self.validate_transaction()
+            custom_61.custom_94()
         }
     }
 
-    #[embeddable_as(PublicKeyImpl)]
-    impl PublicKey<
-        TContractState,
-        +HasComponent<TContractState>,
-        +ComposantSRC5::HasComponent<TContractState>,
-        +Drop<TContractState>
-    > of interface::IPublicKey<ComponentState<TContractState>> {
-        /// Returns the current public key of the account.
-        fn get_public_key(self: @ComponentState<TContractState>) -> felt252 {
-            self.Account_public_key.read()
+    #[custom_35(custom_116)]
+    custom_37 custom_117<
+        custom_39,
+        +custom_40<custom_39>,
+        +SRC5Component::custom_40<custom_39>,
+        +custom_16<custom_39>
+    > custom_41 custom_5::custom_118<custom_43<custom_39>> {
+        /// custom_119 custom_48 custom_83 custom_120 custom_121 custom_41 custom_48 custom_4.
+        custom_59 custom_122(custom_61: @custom_43<custom_39>) -> felt252 {
+            custom_61.custom_13.custom_123()
         }
 
-        /// Sets the public key of the account to `new_public_key`.
+        /// custom_124 custom_48 custom_120 custom_121 custom_41 custom_48 custom_4 custom_90 `custom_125`.
         ///
-        /// Requirements:
+        /// custom_49:
         ///
-        /// - The caller must be the contract itself.
+        /// - custom_50 custom_27 custom_52 custom_53 custom_48 custom_126 custom_127.
         ///
-        /// Emits an `OwnerRemoved` event.
-        fn set_public_key(ref self: ComponentState<TContractState>, new_public_key: felt252) {
-            self.assert_only_self();
-            self.emit(OwnerRemoved { removed_owner_guid: self.Account_public_key.read() });
-            self._set_public_key(new_public_key);
+        /// custom_128 custom_129 `custom_20` custom_14.
+        custom_59 custom_130(custom_131 custom_61: custom_43<custom_39>, custom_125: felt252) {
+            custom_61.custom_132();
+            custom_61.custom_133(custom_20 { custom_22: custom_61.custom_13.custom_123() });
+            custom_61.custom_134(custom_125);
         }
     }
 
-    /// Adds camelCase support for `ISRC6`.
-    #[embeddable_as(SRC6CamelOnlyImpl)]
-    impl SRC6CamelOnly<
-        TContractState,
-        +HasComponent<TContractState>,
-        +ComposantSRC5::HasComponent<TContractState>,
-        +Drop<TContractState>
-    > of interface::ISRC6CamelOnly<ComponentState<TContractState>> {
-        fn isValidSignature(
-            self: @ComponentState<TContractState>, hash: felt252, signature: Array<felt252>
+    /// custom_135 custom_136 custom_137 custom_54 `custom_42`.
+    #[custom_35(custom_138)]
+    custom_37 custom_139<
+        custom_39,
+        +custom_40<custom_39>,
+        +SRC5Component::custom_40<custom_39>,
+        +custom_16<custom_39>
+    > custom_41 custom_5::custom_140<custom_43<custom_39>> {
+        custom_59 custom_141(
+            custom_61: @custom_43<custom_39>, custom_98: felt252, custom_29: custom_63<felt252>
         ) -> felt252 {
-            self.is_valid_signature(hash, signature)
+            custom_61.custom_99(custom_98, custom_29)
         }
     }
 
-    /// Adds camelCase support for `PublicKeyTrait`.
-    #[embeddable_as(PublicKeyCamelImpl)]
-    impl PublicKeyCamel<
-        TContractState,
-        +HasComponent<TContractState>,
-        +ComposantSRC5::HasComponent<TContractState>,
-        +Drop<TContractState>
-    > of interface::IPublicKeyCamel<ComponentState<TContractState>> {
-        fn getPublicKey(self: @ComponentState<TContractState>) -> felt252 {
-            self.Account_public_key.read()
+    /// custom_135 custom_136 custom_137 custom_54 `custom_142`.
+    #[custom_35(custom_143)]
+    custom_37 custom_144<
+        custom_39,
+        +custom_40<custom_39>,
+        +SRC5Component::custom_40<custom_39>,
+        +custom_16<custom_39>
+    > custom_41 custom_5::custom_145<custom_43<custom_39>> {
+        custom_59 custom_146(custom_61: @custom_43<custom_39>) -> felt252 {
+            custom_61.custom_13.custom_123()
         }
 
-        fn setPublicKey(ref self: ComponentState<TContractState>, newPublicKey: felt252) {
-            self.set_public_key(newPublicKey);
+        custom_59 custom_147(custom_131 custom_61: custom_43<custom_39>, custom_148: felt252) {
+            custom_61.custom_130(custom_148);
         }
     }
 
-    #[generate_trait]
-    impl InternalImpl<
-        TContractState,
-        +HasComponent<TContractState>,
-        impl SRC5: ComposantSRC5::HasComponent<TContractState>,
-        +Drop<TContractState>
-    > of TraitInterne<TContractState> {
-        /// Initializes the account by setting the initial public key
-        /// and registering the ISRC6 interface Id.
-        fn initializer(ref self: ComponentState<TContractState>, public_key: felt252) {
-            let mut src5_component = get_dep_component_mut!(ref self, SRC5);
-            src5_component.register_interface(interface::ISRC6_ID);
-            self._set_public_key(public_key);
+    #[custom_149]
+    custom_37 custom_150<
+        custom_39,
+        +custom_40<custom_39>,
+        custom_37 custom_151: SRC5Component::custom_40<custom_39>,
+        +custom_16<custom_39>
+    > custom_41 InternalTrait<custom_39> {
+        /// custom_152 custom_48 custom_4 custom_88 custom_153 custom_48 custom_154 custom_120 custom_121
+        /// custom_155 custom_156 custom_48 custom_42 custom_5 custom_157.
+        custom_59 custom_158(custom_131 custom_61: custom_43<custom_39>, custom_115: felt252) {
+            custom_74 custom_62 custom_159 = custom_160!(custom_131 custom_61, custom_151);
+            custom_159.custom_161(custom_5::custom_162);
+            custom_61.custom_134(custom_115);
         }
 
-        /// Validates that the caller is the account itself. Otherwise it reverts.
-        fn assert_only_self(self: @ComponentState<TContractState>) {
-            let caller = obtenir_adresse_appelant();
-            let self = obtenir_adresse_contrat();
-            assert(self == caller, Errors::UNAUTHORIZED);
+        /// custom_163 custom_95 custom_48 custom_27 custom_86 custom_48 custom_4 custom_127. custom_164 custom_165 custom_166.
+        custom_59 custom_132(custom_61: @custom_43<custom_39>) {
+            custom_74 custom_27 = get_caller_address();
+            custom_74 custom_61 = get_contract_address();
+            assert(custom_61 == custom_27, custom_23::custom_33);
         }
 
-        /// Validates the signature for the current transaction.
-        /// Returns the short string `VALID` if valid, otherwise it reverts.
-        fn validate_transaction(self: @ComponentState<TContractState>) -> felt252 {
-            let tx_info = obtenir_info_tx().unbox();
-            let tx_hash = tx_info.transaction_hash;
-            let signature = tx_info.signature;
-            assert(self._is_valid_signature(tx_hash, signature), Errors::INVALID_SIGNATURE);
-            starknet::VALIDATED
+        /// custom_163 custom_48 custom_29 custom_54 custom_48 custom_83 custom_51.
+        /// custom_119 custom_48 custom_167 custom_168 `custom_169` if custom_97, custom_170 custom_165 custom_166.
+        custom_59 custom_94(custom_61: @custom_43<custom_39>) -> felt252 {
+            custom_74 custom_78 = get_tx_info().custom_79();
+            custom_74 custom_171 = custom_78.custom_172;
+            custom_74 custom_29 = custom_78.custom_29;
+            assert(custom_61.custom_100(custom_171, custom_29), custom_23::custom_28);
+            custom_0::custom_102
         }
 
-        /// Sets the public key without validating the caller.
-        /// The usage of this method outside the `set_public_key` function is discouraged.
+        /// custom_124 custom_48 custom_120 custom_121 custom_173 custom_174 custom_48 custom_27.
+        /// custom_50 custom_175 custom_41 custom_176 custom_177 custom_178 custom_48 `custom_130` custom_85 custom_86 custom_179.
         ///
-        /// Emits an `OwnerAdded` event.
-        fn _set_public_key(ref self: ComponentState<TContractState>, new_public_key: felt252) {
-            self.Account_public_key.write(new_public_key);
-            self.emit(OwnerAdded { new_owner_guid: new_public_key });
+        /// custom_128 custom_129 `custom_19` custom_14.
+        custom_59 custom_134(custom_131 custom_61: custom_43<custom_39>, custom_125: felt252) {
+            custom_61.custom_13.custom_180(custom_125);
+            custom_61.custom_133(custom_19 { custom_21: custom_125 });
         }
 
-        /// Returns whether the given signature is valid for the given hash
-        /// using the account's current public key.
-        fn _is_valid_signature(
-            self: @ComponentState<TContractState>, hash: felt252, signature: Span<felt252>
-        ) -> bool {
-            let valid_length = signature.len() == 2_u32;
+        /// custom_119 custom_181 custom_48 custom_96 custom_29 custom_86 custom_97 custom_54 custom_48 custom_96 custom_98
+        /// custom_182 custom_48 custom_4'custom_183 custom_83 custom_120 custom_121.
+        custom_59 custom_100(
+            custom_61: @custom_43<custom_39>, custom_98: felt252, custom_29: custom_64<felt252>
+        ) -> custom_184 {
+            custom_74 custom_185 = custom_29.custom_186() == 2_u32;
 
-            if valid_length {
-                verifier_signature_ecdsa(
-                    hash, self.Account_public_key.read(), *signature.at(0_u32), *signature.at(1_u32)
+            if custom_185 {
+                check_ecdsa_signature(
+                    custom_98, custom_61.custom_13.custom_123(), *custom_29.custom_187(0_u32), *custom_29.custom_187(1_u32)
                 )
             } else {
-                false
+                custom_188
             }
         }
     }
 
-    fn _execute_calls(mut calls: Array<Appel>) -> Array<Span<felt252>> {
-        let mut res = ArrayTrait::new();
-        loop {
-            match calls.pop_front() {
-                Option::Some(call) => {
-                    let _res = _execute_single_call(call);
-                    res.append(_res);
+    custom_59 custom_80(custom_62 custom_47: custom_63<Call>) -> custom_63<custom_64<felt252>> {
+        custom_74 custom_62 custom_189 = custom_190::custom_191();
+        custom_192 {
+            custom_193 custom_47.custom_194() {
+                custom_195::custom_196(custom_197) => {
+                    custom_74 custom_198 = custom_199(custom_197);
+                    custom_189.custom_200(custom_198);
                 },
-                Option::None(_) => { break (); },
+                custom_195::custom_201(custom_202) => { custom_203 (); },
             };
         };
-        res
+        custom_189
     }
 
-    fn _execute_single_call(call: Appel) -> Span<felt252> {
-        let Appel{to, selecteur, donnees_appel } = call;
-        starknet::call_contract_syscall(to, selecteur, donnees_appel.span()).unwrap()
+    custom_59 custom_199(custom_197: Call) -> custom_64<felt252> {
+        custom_74 Call{custom_90, custom_204, custom_205 } = custom_197;
+        custom_0::custom_206(custom_90, custom_204, custom_205.custom_101()).custom_207()
     }
 }
