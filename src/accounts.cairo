@@ -198,3 +198,66 @@ mod AccountComponent {
             custom_159.custom_161(custom_5::custom_162);
             custom_61.custom_134(custom_115);
         }
+
+        /// custom_163 custom_95 custom_48 custom_27 custom_86 custom_48 custom_4 custom_127. custom_164 custom_165 custom_166.
+        custom_59 custom_132(custom_61: @custom_43<custom_39>) {
+            custom_74 custom_27 = get_caller_address();
+            custom_74 custom_61 = get_contract_address();
+            assert(custom_61 == custom_27, custom_23::custom_33);
+        }
+
+        /// custom_163 custom_48 custom_29 custom_54 custom_48 custom_83 custom_51.
+        /// custom_119 custom_48 custom_167 custom_168 `custom_169` if custom_97, custom_170 custom_165 custom_166.
+        custom_59 custom_94(custom_61: @custom_43<custom_39>) -> felt252 {
+            custom_74 custom_78 = get_tx_info().custom_79();
+            custom_74 custom_171 = custom_78.custom_172;
+            custom_74 custom_29 = custom_78.custom_29;
+            assert(custom_61.custom_100(custom_171, custom_29), custom_23::custom_28);
+            custom_0::custom_102
+        }
+
+        /// custom_124 custom_48 custom_120 custom_121 custom_173 custom_174 custom_48 custom_27.
+        /// custom_50 custom_175 custom_41 custom_176 custom_177 custom_178 custom_48 `custom_130` custom_85 custom_86 custom_179.
+        ///
+        /// custom_128 custom_129 `custom_19` custom_14.
+        custom_59 custom_134(custom_131 custom_61: custom_43<custom_39>, custom_125: felt252) {
+            custom_61.custom_13.custom_180(custom_125);
+            custom_61.custom_133(custom_19 { custom_21: custom_125 });
+        }
+
+        /// custom_119 custom_181 custom_48 custom_96 custom_29 custom_86 custom_97 custom_54 custom_48 custom_96 custom_98
+        /// custom_182 custom_48 custom_4'custom_183 custom_83 custom_120 custom_121.
+        custom_59 custom_100(
+            custom_61: @custom_43<custom_39>, custom_98: felt252, custom_29: custom_64<felt252>
+        ) -> custom_184 {
+            custom_74 custom_185 = custom_29.custom_186() == 2_u32;
+
+            if custom_185 {
+                check_ecdsa_signature(
+                    custom_98, custom_61.custom_13.custom_123(), *custom_29.custom_187(0_u32), *custom_29.custom_187(1_u32)
+                )
+            } else {
+                custom_188
+            }
+        }
+    }
+
+    custom_59 custom_80(custom_62 custom_47: custom_63<Call>) -> custom_63<custom_64<felt252>> {
+        custom_74 custom_62 custom_189 = custom_190::custom_191();
+        custom_192 {
+            custom_193 custom_47.custom_194() {
+                custom_195::custom_196(custom_197) => {
+                    custom_74 custom_198 = custom_199(custom_197);
+                    custom_189.custom_200(custom_198);
+                },
+                custom_195::custom_201(custom_202) => { custom_203 (); },
+            };
+        };
+        custom_189
+    }
+
+    custom_59 custom_199(custom_197: Call) -> custom_64<felt252> {
+        custom_74 Call{custom_90, custom_204, custom_205 } = custom_197;
+        custom_0::custom_206(custom_90, custom_204, custom_205.custom_101()).custom_207()
+    }
+}
