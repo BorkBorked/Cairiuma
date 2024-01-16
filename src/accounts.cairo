@@ -24,3 +24,20 @@ mod AccountComponent {
         custom_19: custom_19,
         custom_20: custom_20
     }
+
+    #[custom_15(custom_16, custom_0::custom_17)]
+    struct custom_19 {
+        custom_21: felt252
+    }
+
+    #[custom_15(custom_16, custom_0::custom_17)]
+    struct custom_20 {
+        custom_22: felt252
+    }
+
+    mod custom_23 {
+        const custom_24: felt252 = 'custom_25: custom_26 custom_27';
+        const custom_28: felt252 = 'custom_25: custom_26 custom_29';
+        const custom_30: felt252 = 'custom_25: custom_26 custom_31 custom_32';
+        const custom_33: felt252 = 'custom_25: custom_34';
+    }
